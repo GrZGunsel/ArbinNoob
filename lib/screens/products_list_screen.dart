@@ -6,6 +6,7 @@ import 'package:den_ecommerce/core/constant/den_theme.dart';
 
 import '../core/service_locator.dart';
 import '../model/cart_model.dart';
+import '../provider/app_provider.dart';
 import '../provider/order_provider.dart';
 import '../provider/product_provider.dart';
 
@@ -36,13 +37,23 @@ class _ProductListScreenState extends State<ProductListScreen> {
   //   });
   // }
 
-  _addToCart({required ProductModel product}) async {
-    List<ProductModel> lst = [];
-    lst.add(product);
+  void Function()? _addToCart({required ProductModel product}) {
+    int userId = locator<AppProvider>().currentUser!.userId;
+    int productId = product.productId;
+    print(userId);
+    print(productId);
+    print("adtocart");
+    // await locator<AppProvider>().addToCart(
+    //   userId: userId,
+    //   productId: product,
+    // );
 
-    setState(() {
-      productList.addAll(lst);
-    });
+    // List<ProductModel> lst = [];
+    // lst.add(product);
+
+    // setState(() {
+    //   productList.addAll(lst);
+    // });
   }
 
   @override
@@ -205,15 +216,28 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                                   .secondaryColor,
                                                         ),
                                                         onPressed: () async {
-                                                          await _addToCart(
-                                                            product: locator<
-                                                                    ProductProvider>()
-                                                                .productList[index],
+                                                          print('object');
+                                                          int userId = locator<
+                                                                  AppProvider>()
+                                                              .currentUser!
+                                                              .userId;
+                                                          int productId = locator<
+                                                                  ProductProvider>()
+                                                              .productList[
+                                                                  index]
+                                                              .productId;
+                                                          print("autoCart");
+                                                          print(userId);
+                                                          print(productId);
+                                                          print("adtocart");
+
+                                                          await locator<
+                                                                  AppProvider>()
+                                                              .addToCart(
+                                                            userId: userId,
+                                                            productId:
+                                                                productId,
                                                           );
-                                                          locator<OrderProvider>()
-                                                              .addProductToCart(
-                                                                  product:
-                                                                      productList);
                                                         },
                                                         child: Row(
                                                           mainAxisAlignment:

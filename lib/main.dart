@@ -1,4 +1,5 @@
 import 'package:den_ecommerce/core/constant/den_theme.dart';
+import 'package:den_ecommerce/provider/app_provider.dart';
 import 'package:den_ecommerce/provider/order_provider.dart';
 import 'package:den_ecommerce/screens/home_screen.dart';
 import 'package:den_ecommerce/screens/login_screen.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: locator<OrderProvider>(),
+        ),
+        ChangeNotifierProvider.value(
+          value: locator<AppProvider>(),
         ),
       ],
       child: MaterialApp(

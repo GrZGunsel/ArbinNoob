@@ -1,13 +1,23 @@
-import 'package:den_ecommerce/model/product_model.dart';
-
 class CartModel {
-  final ProductModel product;
-  final double totalPrice;
-  final double quantity;
-
   CartModel({
+    required this.user,
     required this.product,
-    required this.totalPrice,
     required this.quantity,
   });
+
+  final int user;
+  final int product;
+  final int quantity;
+
+  factory CartModel.fromMap(Map<String, dynamic> json) => CartModel(
+        user: json["user"],
+        product: json["product"],
+        quantity: json["quantity"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "user": user,
+        "product": product,
+        "quantity": quantity,
+      };
 }

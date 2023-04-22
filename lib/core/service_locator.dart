@@ -1,4 +1,5 @@
 import 'package:den_ecommerce/core/api_manager.dart';
+import 'package:den_ecommerce/provider/app_provider.dart';
 import 'package:get_it/get_it.dart';
 
 import '../provider/order_provider.dart';
@@ -18,5 +19,9 @@ Future<void> setupLocator() async {
 
   locator.registerLazySingleton<OrderProvider>(
     () => OrderProvider(),
+  );
+
+    locator.registerLazySingleton<AppProvider>(
+    () => AppProvider(),
   );
 }

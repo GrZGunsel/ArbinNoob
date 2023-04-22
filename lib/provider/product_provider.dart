@@ -19,12 +19,13 @@ class ProductProvider with ChangeNotifier {
         List<ProductModel> products = [];
         list.forEach((element) {
           products.add(ProductModel.fromMap(element));
+          // print("ourproduct::: ${products.length}");
         });
         _products = products;
-        print(":::::");
-        print(_products);
-        print(_products.length);
-        print(":::::");
+        // print(":::::");
+        // print(_products);
+        // print(_products.length);
+        // print(":::::");
         notifyListeners();
       }
     } catch (error) {
@@ -35,7 +36,8 @@ class ProductProvider with ChangeNotifier {
 
   Future<void> getProductDetail({required int id}) async {
     try {
-      final Response response = await ProductRepository.getProductsDetail(id:id);
+      final Response response =
+          await ProductRepository.getProductsDetail(id: id);
 
       if (response.data != null) {
         _product = ProductModel.fromMap(response.data);

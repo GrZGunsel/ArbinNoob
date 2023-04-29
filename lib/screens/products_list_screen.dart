@@ -216,7 +216,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                                   .secondaryColor,
                                                         ),
                                                         onPressed: () async {
-                                                          print('object');
+                                                          // print('object');
                                                           int userId = locator<
                                                                   AppProvider>()
                                                               .currentUser!
@@ -226,10 +226,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                               .productList[
                                                                   index]
                                                               .productId;
-                                                          print("autoCart");
-                                                          print(userId);
-                                                          print(productId);
-                                                          print("adtocart");
+                                                          // print("autoCart");
+                                                          // print(userId);
+                                                          // print(productId);
+                                                          // print("adtocart");
 
                                                           await locator<
                                                                   AppProvider>()

@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import '../core/service_locator.dart';
+import '../provider/app_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +17,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future? _future;
+  bool _isInit = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      _future = _loadData();
+    }
+    _isInit = false;
+  }
+
   _loadData() async {
-    locator<ProductProvider>().getProduct();
+    Future.wait([
+      locator<ProductProvider>().getProduct(),
+      locator<AppProvider>().getUserDetail(
+        userId: locator<AppProvider>().currentUser!.userId,
+      )
+    ]);
   }
 
   @override
@@ -27,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: FutureBuilder(
-          future: locator<ProductProvider>().getProduct(),
+          future: _future,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             return snapshot.connectionState == ConnectionState.waiting
                 ? Align(
@@ -54,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         TextStyle(color: DenTheme.primaryColor),
                                   ),
                                   Text(
-                                    "Arbin Paudel",
+                                    "${locator<AppProvider>().userDetail!.firstName} ${locator<AppProvider>().userDetail!.lastName}",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500),
@@ -288,7 +311,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               DenTheme
                                                                   .secondaryColor,
                                                         ),
-                                                        onPressed: () {},
+                                                        onPressed: () async {
+                                                          // print('object');
+                                                          int userId = locator<
+                                                                  AppProvider>()
+                                                              .currentUser!
+                                                              .userId;
+                                                          int productId =
+                                                              i.productId;
+                                                          // print("autoCart");
+                                                          // print(userId);
+                                                          // print(productId);
+                                                          // print("adtocart");
+
+                                                          await locator<
+                                                                  AppProvider>()
+                                                              .addToCart(
+                                                            userId: userId,
+                                                            productId:
+                                                                productId,
+                                                          );
+                                                        },
                                                         child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment

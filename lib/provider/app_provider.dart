@@ -1,15 +1,21 @@
 import 'package:den_ecommerce/model/cart_model.dart';
+import 'package:den_ecommerce/model/order_model.dart';
 import 'package:den_ecommerce/provider/product_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../core/service_locator.dart';
+import '../model/new_cart_model.dart';
 import '../model/product_cart_model.dart';
 import '../model/product_model.dart';
 import '../model/user_model.dart';
 import '../repository/repository.dart';
 
 class AppProvider with ChangeNotifier {
+  UserDetailModel? _userDetail;
+
+  UserDetailModel? get userDetail => _userDetail;
+
   UserModel? _registerUser;
 
   UserModel? get registerUser => _registerUser;
@@ -35,6 +41,103 @@ class AppProvider with ChangeNotifier {
 
   List<ProductCartModel>? get dummyList => _dummyList;
 
+  //new cart screen
+  List<NewCartModel>? _newProductCart;
+
+  List<NewCartModel>? get newProductCart => _newProductCart;
+
+  //counter
+  int _counter = 0;
+
+  // int get counter => _counter;
+
+// int get counter{
+//   return
+// }
+
+///////order/////
+  OrderModel? _orderModel;
+  OrderModel? get orderModel => _orderModel;
+
+  Future<void> order({
+    required String deliveryAddress,
+    required bool isPaid,
+    required String deliveryOption,
+    required List products,
+    required int user,
+  }) async {
+    try {
+      // print("email: $username");
+      // print("password: $password");
+      print('sucess');
+
+      print("deliveryAddress::$deliveryAddress");
+      print("isPaid::$isPaid");
+      print("deliveryOption::$deliveryOption");
+      print("products::${products}");
+      print("user::$user");
+      final Response response = await Repository.order(
+        deliveryAddress: deliveryAddress,
+        isPaid: isPaid,
+        deliveryOption: deliveryOption,
+        products: products,
+        user: user,
+      );
+
+      if (response.data != null) {
+        print("data11:::");
+        print(response.data);
+        print("data22:::");
+        _orderModel = OrderModel.fromMap(response.data);
+
+        print("_orderModel::${_orderModel!.products.length}");
+      }
+
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<void> getUserDetail({
+    required int userId,
+  }) async {
+    try {
+      print("userID:::::::;;;$userId");
+      final Response response = await Repository.getUserDetails(
+        userId: userId,
+      );
+      if (response.data != null) {
+        // UserDetailModel user = response.data;
+        _userDetail = UserDetailModel.fromMap(response.data);
+        print(_userDetail);
+        print("User::${_userDetail!.firstName}");
+      }
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  set counter(int value) {
+    //print("valuebe: $value");
+    value++;
+    _counter = value;
+    // print("valueaft: $value");
+    // print("_counter: $_counter");
+    notifyListeners();
+  }
+
+  increment(index) {
+    counter = newProductCart![index].quantity;
+  }
+
+  // set setquantityValueDec(int value) {
+  //   value--;
+  // }
+
   Future<void> getDummyProdcutCart({
     required int id,
     // required CartModel element,
@@ -42,9 +145,9 @@ class AppProvider with ChangeNotifier {
     required List<CartModel> productCartLst,
   }) async {
     try {
-      print("id::$id");
+      // print("id::$id");
 
-      print("productCartLst::::${productCartLst.length}");
+      // print("productCartLst::::${productCartLst.length}");
       // print("element ${element.product}");
       // print("productModel ${productModel.productId}");
       List<ProductCartModel> pCLists = [];
@@ -85,16 +188,16 @@ class AppProvider with ChangeNotifier {
         // print(dummyProdcutCart.product.productName);
         // print('whyyyy');
         pCLists.add(dummyProdcutCart);
-        print('whattttt');
-        print(pCLists.length);
-        print('whattttt');
+        // print('whattttt');
+        // print(pCLists.length);
+        // print('whattttt');
       });
-      print('pClist:: ${pCLists.length}');
+      //print('pClist:: ${pCLists.length}');
 
       _dummyList = pCLists;
       notifyListeners();
 
-      print("_dummyList :: ${_dummyList!.length}");
+      //print("_dummyList :: ${_dummyList!.length}");
     } catch (error) {
       print(error);
       rethrow;
@@ -107,7 +210,7 @@ class AppProvider with ChangeNotifier {
     try {
       // print("email: $username");
       // print("password: $password");
-
+      // print("userId $userId");
       final Response response = await Repository.getProductCart(
         userId: userId,
       );
@@ -117,15 +220,15 @@ class AppProvider with ChangeNotifier {
       // _productCart = CartModel.fromMap(response.data);
       if (response.data != null) {
         List list = response.data;
-        List<CartModel> products = [];
+        List<NewCartModel> products = [];
         list.forEach((element) {
-          products.add(CartModel.fromMap(element));
+          //print("element:: $element");
+          products.add(NewCartModel.fromMap(element));
         });
-        _productCart = products;
+        // print(products.length);
+        _newProductCart = products;
 
-        print('getproductss');
-        print(_productCart!.length);
-        print('getproductss');
+        //print("_newProductCart!.length:: ${_newProductCart!.length}");
       }
       notifyListeners();
     } catch (error) {
@@ -150,9 +253,9 @@ class AppProvider with ChangeNotifier {
       // print(response.data);
       // print("::::::::::::::");
       _cart = CartModel.fromMap(response.data);
-      print(":::::::::::::::");
-      print(_cart);
-      print(":::::::::::::::");
+      // print(":::::::::::::::");
+      // print(_cart);
+      // print(":::::::::::::::");
       notifyListeners();
     } catch (error) {
       print(error);
@@ -223,11 +326,8 @@ class AppProvider with ChangeNotifier {
   }
 }
 
+//  cart scren =
 
-
-
-//  cart scren = 
- 
 //  - products list
 //  - Confrim Order
 
@@ -235,19 +335,17 @@ class AppProvider with ChangeNotifier {
 
 //  - My orderHistory :
 
-
-
 // [
 //   {
 //   orderID:1,
-//   userID:1, 
+//   userID:1,
 //   productList: [],
-//   GrandTOtal: 
+//   GrandTOtal:
 // },
 // {
 //   orderID:2,
-//   userID:1, 
+//   userID:1,
 //   productList: [],
-//   GrandTOtal: 
+//   GrandTOtal:
 // }
 // ]

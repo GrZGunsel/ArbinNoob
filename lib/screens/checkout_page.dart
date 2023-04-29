@@ -1,13 +1,26 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:den_ecommerce/model/new_cart_model.dart';
 import 'package:den_ecommerce/widgets/formWidget/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import '../core/constant/den_theme.dart';
+import '../core/service_locator.dart';
+import '../model/order_model.dart';
+import '../provider/app_provider.dart';
 
 class CheckoutPage extends StatefulWidget {
-  const CheckoutPage({super.key});
+  const CheckoutPage(
+      {super.key,
+      // required this.productId, required this.quantity,
+      required this.productList});
+
+  // final int productId;
+  // final int quantity;
+  final List<NewCartModel> productList;
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
@@ -16,6 +29,40 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   String? _address;
   String? selectedOption;
+
+  List _list = [];
+
+  // void getProductList() {
+  //   _list!.add(Product(product: widget.productId, quantity: widget.quantity));
+  //   print("_list:::${_list!.length}");
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    getProductList();
+  }
+
+  getProductList() {
+    print("widget.productList:::${widget.productList}");
+    List _productList = [];
+    widget.productList.forEach((element) {
+      final product = OrderProduct(
+          product: element.product.productId, quantity: element.quantity);
+      final json = orderProductModelToMap(product);
+      print(":::json:");
+      print(json);
+      print(":::json:");
+      _list.add(json);
+    });
+    setState(() {
+      // _list = jsonEncode(_productList.)
+    });
+    print("::ddd:::");
+    print(_list.length);
+    print(_list[0].product);
+    print(":::dddd::");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,167 +78,205 @@ class _CheckoutPageState extends State<CheckoutPage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Proceed to Checkout",
-                style: DenTheme.largeheadingStyle,
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.023,
-              ),
-              Text(
-                "Products",
-                style: DenTheme.textLabel
-                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-              CarouselSlider(
-                options: CarouselOptions(
-                    aspectRatio: 16 / 9,
-                    enableInfiniteScroll: true,
-                    viewportFraction: 0.7,
-                    disableCenter: true,
-                    height: MediaQuery.of(context).size.height * 0.12),
-                items: [1, 2, 3, 4, 5].map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return _items();
-                    },
+        body: FutureBuilder(
+          future: locator<AppProvider>().order(
+              deliveryAddress: "banepa",
+              isPaid: false,
+              deliveryOption: "express",
+              products: _list,
+              // [
+              //   {"product": 1, "quantity": 2},
+              //   {"product": 2, "quantity": 1}
+              // ],
+              user: locator<AppProvider>().currentUser!.userId),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            return snapshot.connectionState == ConnectionState.waiting
+                ? Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(),
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Proceed to Checkout",
+                          style: DenTheme.largeheadingStyle,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.023,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await getProductList();
+                          },
+                          child: Text(
+                            "Products",
+                            style: DenTheme.textLabel.copyWith(
+                                fontWeight: FontWeight.w600, fontSize: 18),
+                          ),
+                        ),
+                        CarouselSlider(
+                          options: CarouselOptions(
+                              aspectRatio: 16 / 9,
+                              enableInfiniteScroll: true,
+                              viewportFraction: 0.7,
+                              disableCenter: true,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.12),
+                          items: [1, 2, 3, 4, 5].map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return _items();
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.024,
+                        ),
+                        Text(
+                          "Delivery Address",
+                          style: DenTheme.textLabel.copyWith(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        ),
+                        _deliveryAddress(),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.024,
+                        ),
+                        Text(
+                          "Payment Options",
+                          style: DenTheme.textLabel.copyWith(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        ),
+                        SizedBox(
+                          height: 140,
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              RadioListTile(
+                                title: Text('Cash on Delivery'),
+                                value: 'Cash on Delivery',
+                                groupValue: selectedOption,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedOption = value;
+                                  });
+                                },
+                              ),
+                              RadioListTile(
+                                title: Text('Online Payment'),
+                                value: 'Online Payment',
+                                groupValue: selectedOption,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedOption = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Color(0xffF2F2F2),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Total",
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  Text(
+                                    '\$9.99',
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.024,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Tax",
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  Text(
+                                    '\$9.99',
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.010,
+                              ),
+                              Divider(
+                                height: 2,
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.010,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Grand total",
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  Text(
+                                    '\$9.99',
+                                    style: DenTheme.textLabel.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.032,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: DenTheme.secondaryColor,
+                            elevation: 0,
+                            padding: EdgeInsets.all(16),
+                            fixedSize:
+                                Size(MediaQuery.of(context).size.width, 50.0),
+                          ),
+                          child: Text("Place Order"),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   );
-                }).toList(),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.024,
-              ),
-              Text(
-                "Delivery Address",
-                style: DenTheme.textLabel
-                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-              _deliveryAddress(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.024,
-              ),
-              Text(
-                "Payment Options",
-                style: DenTheme.textLabel
-                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-              SizedBox(
-                height: 140,
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    RadioListTile(
-                      title: Text('Cash on Delivery'),
-                      value: 'Cash on Delivery',
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text('Online Payment'),
-                      value: 'Online Payment',
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                clipBehavior: Clip.hardEdge,
-                padding: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: Color(0xffF2F2F2),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Total",
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 16),
-                        ),
-                        Text(
-                          '\$9.99',
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w600, fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.024,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Tax",
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 16),
-                        ),
-                        Text(
-                          '\$9.99',
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w600, fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.010,
-                    ),
-                    Divider(
-                      height: 2,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.010,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Grand total",
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 16),
-                        ),
-                        Text(
-                          '\$9.99',
-                          style: DenTheme.textLabel.copyWith(
-                              fontWeight: FontWeight.w600, fontSize: 16),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.032,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: DenTheme.secondaryColor,
-                  elevation: 0,
-                  padding: EdgeInsets.all(16),
-                  fixedSize: Size(MediaQuery.of(context).size.width, 50.0),
-                ),
-                child: Text("Place Order"),
-                onPressed: () {},
-              ),
-            ],
-          ),
+          },
         ),
       ),
     );

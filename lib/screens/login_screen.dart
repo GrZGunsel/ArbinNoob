@@ -6,6 +6,7 @@ import 'package:den_ecommerce/widgets/formWidget/customTextField.dart';
 import 'package:flutter/material.dart';
 
 import '../core/service_locator.dart';
+import '../model/user_model.dart';
 import 'index_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,6 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // setState(() {
       //   _isLoading = true;
       // });
+      AuthUserModel? loginUser = locator<AppProvider>().currentUser;
+      print("loginUser ${loginUser!.userId}");
       Navigator.push(
         context,
         MaterialPageRoute(

@@ -19,13 +19,13 @@ class ProductProvider with ChangeNotifier {
         List<ProductModel> products = [];
         list.forEach((element) {
           products.add(ProductModel.fromMap(element));
-          // print("ourproduct::: ${products.length}");
+          print("ourproduct::: ${products[0].productName}");
         });
         _products = products;
-        // print(":::::");
-        // print(_products);
-        // print(_products.length);
-        // print(":::::");
+        print(":::::");
+        print(_products);
+        print(_products.length);
+        print(":::::");
         notifyListeners();
       }
     } catch (error) {

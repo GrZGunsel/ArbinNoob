@@ -7,9 +7,13 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import '../core/constant/den_theme.dart';
+import '../core/service_locator.dart';
+import '../provider/app_provider.dart';
 
 class IndexScreen extends StatefulWidget {
-  const IndexScreen({super.key});
+  const IndexScreen({
+    super.key,
+  });
 
   @override
   State<IndexScreen> createState() => _IndexScreenState();
@@ -17,9 +21,11 @@ class IndexScreen extends StatefulWidget {
 
 class _IndexScreenState extends State<IndexScreen> {
   int _selectedIndex = 0;
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
+
+  List<Widget> widgetOptions = <Widget>[
     HomeScreen(),
     ProductListScreen(),
     CartPage(),
@@ -36,7 +42,7 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _widgetOptions.elementAt(_selectedIndex),
+        body: widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,

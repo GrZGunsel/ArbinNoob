@@ -90,7 +90,7 @@ class AppProvider with ChangeNotifier {
         print("data22:::");
         _orderModel = OrderModel.fromMap(response.data);
 
-        print("_orderModel::${_orderModel!.products.length}");
+        // print("_orderModel::${_orderModel!.products.length}");
       }
 
       notifyListeners();
@@ -253,6 +253,34 @@ class AppProvider with ChangeNotifier {
       // print(response.data);
       // print("::::::::::::::");
       _cart = CartModel.fromMap(response.data);
+      // print(":::::::::::::::");
+      // print(_cart);
+      // print(":::::::::::::::");
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<void> updateCart({
+    required int user,
+    required int product,
+    required int quantity,
+    required int cartId,
+  }) async {
+    try {
+      final Response response = await Repository.updateCart(
+        user: user,
+        product: product,
+        quantity: quantity,
+        cartId: cartId,
+      );
+
+      print("::::::update cart::::::::");
+      print(response.data);
+      print("::::::update cart::::::::");
+      // _cart = CartModel.fromMap(response.data);
       // print(":::::::::::::::");
       // print(_cart);
       // print(":::::::::::::::");

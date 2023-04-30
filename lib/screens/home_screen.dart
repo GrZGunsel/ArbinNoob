@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _loadData() async {
-    Future.wait([
+    await Future.wait([
       locator<ProductProvider>().getProduct(),
       locator<AppProvider>().getUserDetail(
         userId: locator<AppProvider>().currentUser!.userId,

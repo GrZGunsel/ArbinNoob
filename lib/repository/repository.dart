@@ -21,7 +21,7 @@ class Repository {
     required int cartId,
   }) {
     var response = _apiManager.dio.put(
-      '$addToCartUrl/$cartId',
+      '$addToCartUrl/$cartId/',
       data: {
         "user": user,
         "product": product,
@@ -97,10 +97,12 @@ class Repository {
     required String username,
     required String password,
   }) async {
-    return _apiManager.dio.post(loginUrl, data: {
+    var response = _apiManager.dio.post(loginUrl, data: {
       "username": username,
       "password": password,
     });
+    print(response);
+    return response;
   }
 
   static Future<Response> userRegister({

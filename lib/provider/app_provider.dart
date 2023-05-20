@@ -269,6 +269,10 @@ class AppProvider with ChangeNotifier {
     required int quantity,
     required int cartId,
   }) async {
+    print("user $user");
+    print("product $product");
+    print("quantity $quantity");
+    print("cartID $cartId");
     try {
       final Response response = await Repository.updateCart(
         user: user,
@@ -284,6 +288,7 @@ class AppProvider with ChangeNotifier {
       // print(":::::::::::::::");
       // print(_cart);
       // print(":::::::::::::::");
+      await getProductCart(userId: user);
       notifyListeners();
     } catch (error) {
       print(error);
@@ -296,16 +301,16 @@ class AppProvider with ChangeNotifier {
     required String password,
   }) async {
     try {
-      // print("email: $username");
-      // print("password: $password");
+      print("email: $username");
+      print("password: $password");
 
       final Response response = await Repository.userLogin(
         password: password,
         username: username,
       );
-      // print("::::::::::::::");
-      // print(response.data);
-      // print("::::::::::::::");
+      print("::::::::::::::");
+      print(response.data);
+      print("::::::::::::::");
       _currentUser = AuthUserModel.fromMap(response.data);
 
       notifyListeners();

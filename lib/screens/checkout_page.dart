@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:den_ecommerce/model/new_cart_model.dart';
+import 'package:den_ecommerce/screens/home_screen.dart';
+import 'package:den_ecommerce/screens/index_screen.dart';
 import 'package:den_ecommerce/widgets/formWidget/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+// import 'package:khalti_flutter/khalti_flutter.dart';
 
 import '../core/constant/den_theme.dart';
 import '../core/service_locator.dart';
@@ -16,11 +19,11 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage(
       {super.key,
       // required this.productId,
-      required this.quantity,
+      // required this.quantity,
       required this.productList});
 
   // final int productId;
-  final int quantity;
+  // final int quantity;
   final List<NewCartModel> productList;
 
   @override
@@ -60,6 +63,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     print("widget.productList:::${widget.productList}");
     List _productList = [];
     widget.productList.forEach((element) {
+      print("shitty ${element.product}");
+      print("postqunatity ${element.quantity}");
+
       _productList.add(
           {"product": element.product.productId, "quantity": element.quantity});
     });
@@ -81,7 +87,57 @@ class _CheckoutPageState extends State<CheckoutPage> {
           products: _list,
           user: locator<AppProvider>().currentUser!.userId);
       print('sucess mssg');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Order Succesfully!"),
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => IndexScreen(),
+        ),
+      );
     }
+    // final config = PaymentConfig(
+    //   amount: 10000, // Amount should be in paisa
+    //   productIdentity: 'dell-g5-g5510-2021',
+    //   productName: 'Dell G5 G5510 2021',
+    //   productUrl: 'https://www.khalti.com/#/bazaar',
+    //   additionalData: {
+    //     // Not mandatory; can be used for reporting purpose
+    //     'vendor': 'Khalti Bazaar',
+    //   },
+    //   mobile:
+    //       '9800000001', // Not mandatory; can be used to fill mobile number field
+    //   mobileReadOnly:
+    //       true, // Not mandatory; makes the mobile field not editable
+    // );
+    // KhaltiScope.of(context).pay(
+    //   config: config,
+    //   preferences: [
+    //     PaymentPreference.connectIPS,
+    //     PaymentPreference.eBanking,
+    //     PaymentPreference.sct,
+    //   ],
+    //   onSuccess: (s) async {
+
+    //   },
+    //   onFailure: (f) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("Order Failed!"),
+    //       ),
+    //     );
+    //   },
+    //   onCancel: () {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("Order Failed!"),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   grandTotal() {

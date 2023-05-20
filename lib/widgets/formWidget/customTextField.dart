@@ -23,7 +23,7 @@ class CustomTextField extends StatefulWidget {
   CustomTextField({
     Key? key,
     this.isPassword = false,
-    this.isToggle = false,
+    this.isToggle = true,
     this.isFilled = false,
     this.controller,
     this.initialValue,
@@ -52,7 +52,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextFormField(
       keyboardType: widget.keyboardType,
       initialValue: widget.initialValue,
-      obscureText: widget.isToggle,
+      obscureText: !widget.isToggle,
       style: TextStyle(
         fontSize: 14,
       ),

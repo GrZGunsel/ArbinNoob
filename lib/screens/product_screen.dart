@@ -1,6 +1,8 @@
 import 'package:den_ecommerce/core/constant/den_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
+import '../provider/app_provider.dart';
+
 import 'package:flutter/src/widgets/framework.dart';
 
 import '../core/service_locator.dart';
@@ -128,7 +130,30 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Text("Add to Cart"),
                               ],
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              // print('object');
+                              int userId =
+                                  locator<AppProvider>().currentUser!.userId;
+                              int productId = locator<ProductProvider>()
+                                  .productList[widget.id - 1]
+                                  .productId;
+                              // print("autoCart");
+                              // print(userId);
+                              // print(productId);
+                              // print("adtocart");
+
+                              await locator<AppProvider>().addToCart(
+                                userId: userId,
+                                productId: productId,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "${locator<ProductProvider>().product!.productName} "
+                                      " Added to Cart"),
+                                ),
+                              );
+                            },
                           )
                         ],
                       ),

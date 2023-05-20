@@ -24,11 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // print('cdddcd');
-      // print(",,,,,,,,,,,,");
-      // print(_userName);
-      // print(_password);
-      // print(",,,,,,,,,,,,");
+      print('cdddcd');
+      print(",,,,,,,,,,,,");
+      print(_userName);
+      print(_password);
+      print(",,,,,,,,,,,,");
       await locator<AppProvider>().login(
         username: _userName!,
         password: _password!,
@@ -38,10 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
       // });
       AuthUserModel? loginUser = locator<AppProvider>().currentUser;
       print("loginUser ${loginUser!.userId}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Login Succesfully!"),
+        ),
+      );
+
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => IndexScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$context"),
         ),
       );
     }

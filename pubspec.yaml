@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.5
   get_it: ^7.2.0
   dio: ^5.1.1
+  khalti_flutter: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,9 @@
 import 'package:den_ecommerce/core/constant/den_theme.dart';
+import 'package:den_ecommerce/screens/change_password.dart';
 import 'package:den_ecommerce/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-
 import '../core/service_locator.dart';
 import '../provider/app_provider.dart';
 
@@ -54,7 +54,6 @@ class _MenuScreenState extends State<MenuScreen> {
                             radius: 30.0,
                             backgroundColor: Colors.grey.shade200,
                             child: Icon(Icons.person),
-                            
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.032,
@@ -182,13 +181,24 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   Card(
                     elevation: 0,
-                    child: ListTile(
-                      leading: Icon(Icons.key),
-                      title: Text(
-                        "Change Password",
-                        style: TextStyle(fontSize: 12),
+                    child: InkWell(
+                      onTap: () {
+                        print("mujiarbin");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePassword(),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.key),
+                        title: Text(
+                          "Change Password",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        trailing: Icon(Icons.chevron_right),
                       ),
-                      trailing: Icon(Icons.chevron_right),
                     ),
                   ),
                   Card(
@@ -227,6 +237,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   ),
                                   child: Text("Confirm"),
                                   onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Logout Succesfully!"),
+                                      ),
+                                    );
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

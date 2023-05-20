@@ -36,7 +36,7 @@ class _CartPageState extends State<CartPage> {
 
   List<ProductCartModel> _dataList = [];
 
-  int _newQty = 0;
+  // int _newQty = 0;
 
   void updateChildState(int newState) {
     print(newState);
@@ -157,7 +157,19 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                       ),
                                       IncrementDecrement(
-                                        quantity: 1,
+                                        userId: locator<AppProvider>()
+                                            .newProductCart![index]
+                                            .user,
+                                        cartId: locator<AppProvider>()
+                                            .newProductCart![index]
+                                            .id,
+                                        product_id: locator<AppProvider>()
+                                            .newProductCart![index]
+                                            .product
+                                            .productId,
+                                        quantity: locator<AppProvider>()
+                                            .newProductCart![index]
+                                            .quantity,
                                         calbackFunc: updateChildState,
                                       ),
                                     ],
@@ -189,6 +201,7 @@ class _CartPageState extends State<CartPage> {
                                 //     );
                                 //   },
                                 // );
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -196,7 +209,7 @@ class _CartPageState extends State<CartPage> {
                                       productList: locator<AppProvider>()
                                           .newProductCart!,
                                       // productId: 1,
-                                      quantity: _newQty,
+                                      // quantity: _newQty,
                                     ),
                                   ),
                                 );

@@ -43,6 +43,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     print(userId);
     print(productId);
     print("adtocart");
+
     // await locator<AppProvider>().addToCart(
     //   userId: userId,
     //   productId: product,
@@ -237,6 +238,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                             userId: userId,
                                                             productId:
                                                                 productId,
+                                                          );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                  "Added to Cart"),
+                                                            ),
                                                           );
                                                         },
                                                         child: Row(

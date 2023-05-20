@@ -331,6 +331,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             productId:
                                                                 productId,
                                                           );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                  "Added to Cart"),
+                                                            ),
+                                                          );
                                                         },
                                                         child: Row(
                                                           crossAxisAlignment:

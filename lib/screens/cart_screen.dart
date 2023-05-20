@@ -175,20 +175,7 @@ class _CartPageState extends State<CartPage> {
                                 backgroundColor: DenTheme.secondaryColor,
                               ),
                               onPressed: () {
-                                // List<NewCartModel>? cart =
-                                //     locator<AppProvider>().newProductCart;
-                                // cart!.forEach(
-                                //   (element) async {
-                                //     await locator<AppProvider>().updateCart(
-                                //       user: locator<AppProvider>()
-                                //           .currentUser!
-                                //           .userId,
-                                //       product: element.product.productId,
-                                //       quantity: 6,
-                                //       cartId: element.id,
-                                //     );
-                                //   },
-                                // );
+                             
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

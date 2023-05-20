@@ -97,10 +97,13 @@ class Repository {
     required String username,
     required String password,
   }) async {
-    return _apiManager.dio.post(loginUrl, data: {
+    var response = _apiManager.dio.post(loginUrl, data: {
       "username": username,
       "password": password,
     });
+
+    print('response:::$response');
+    return response;
   }
 
   static Future<Response> userRegister({

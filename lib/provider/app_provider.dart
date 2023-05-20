@@ -303,9 +303,11 @@ class AppProvider with ChangeNotifier {
         password: password,
         username: username,
       );
-      // print("::::::::::::::");
-      // print(response.data);
-      // print("::::::::::::::");
+      print(response.statusCode);
+      print("::::::::::::::");
+      print(response.data);
+      print("::::::::::::::");
+
       _currentUser = AuthUserModel.fromMap(response.data);
 
       notifyListeners();
